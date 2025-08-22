@@ -1,0 +1,67 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace A4
+{
+    internal class Program
+    {
+        class VendingKiosk
+        {
+            static readonly decimal[] denominations = { 1000, 500, 200, 100, 50, 20, 10, 5, 1, 0.25m, 0.10m, 0.05m };
+            static void Main()
+            {
+                Console.Write("Enter amount due: ");
+                decimal amountDue = Convert.ToDecimal(Console.ReadLine());
+
+                Console.Write("Enter amount paid: ");
+                decimal amountPaid = Convert.ToDecimal(Console.ReadLine());
+
+
+                if (amountPaid < amountDue)
+                {
+                    Console.WriteLine("Error. Please input amount paid greater than amount due.");
+                    return;
+                }
+
+                decimal change = amountPaid - amountDue;
+                Console.WriteLine($"Returned change: {change}");
+
+                int[] changeCounts = MakeChange(change);
+                DisplayChangeBreakdown(changeCounts);
+            }
+
+            static int[] MakeChange(decimal change)
+            {
+                int[] counts = new int[denominations.Length];
+
+                for (int i = 0; i < denominations.Length; i++)
+                {
+                    counts[i] = (int)(change / denominations[i]);
+                    change -= counts[i] * denominations[i];
+                    change = Math.Round(change, 2); 
+                }
+
+                return counts;
+            }
+            static void DisplayChangeBreakdown(int[] counts)
+            {
+                int totalPieces = 0;
+                Console.WriteLine("\nDenomination       Count");
+
+                for (int i = 0; i < denominations.Length; i++)
+                {
+                    if (counts[i] > 0)
+                    {
+                        Console.WriteLine($"₱{denominations[i],-10}          {counts[i]}");
+                        totalPieces += counts[i];
+                    }
+                }
+
+                Console.WriteLine($"\nTotal pieces: {totalPieces}");
+            }
+        }
+    }
+}
