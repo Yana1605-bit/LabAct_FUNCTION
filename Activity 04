@@ -11,14 +11,15 @@ namespace A4
         class VendingKiosk
         {
             static decimal[] denominations = { 1000, 500, 200, 100, 50, 20, 10, 5, 1, 0.25m, 0.10m, 0.05m };
+            
             static void Main()
             {
+                Console.OutputEncoding = System.Text.Encoding.UTF8;
                 Console.Write("Enter amount due: ");
                 decimal amountDue = Convert.ToDecimal(Console.ReadLine());
 
                 Console.Write("Enter amount paid: ");
                 decimal amountPaid = Convert.ToDecimal(Console.ReadLine());
-
 
                 if (amountPaid < amountDue)
                 {
