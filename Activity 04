@@ -10,8 +10,8 @@ namespace A4
     {
         class VendingKiosk
         {
-            static decimal[] denominations = { 1000, 500, 200, 100, 50, 20, 10, 5, 1, 0.25m, 0.10m, 0.05m };
-            
+            static int[] denominations = { 1000, 500, 200, 100, 50, 20, 10, 5, 1 };
+            static decimal[] coins = { 0.25m, 0.10m, 0.05m };
             static void Main()
             {
                 Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -21,6 +21,7 @@ namespace A4
                 Console.Write("Enter amount paid: ");
                 decimal amountPaid = Convert.ToDecimal(Console.ReadLine());
 
+
                 if (amountPaid < amountDue)
                 {
                     Console.WriteLine("Error. Please input amount paid greater than amount due.");
@@ -28,40 +29,37 @@ namespace A4
                 }
 
                 decimal change = amountPaid - amountDue;
+                if (change == 0)
+                {
+                    Console.WriteLine("Exact payment, no change.");
+                }
                 Console.WriteLine($"Returned change: {change}");
-
-                int[] changeCounts = MakeChange(change);
-                DisplayChangeBreakdown(changeCounts);
+                MakeChange(change);
             }
-
             static int[] MakeChange(decimal change)
             {
-                int[] counts = new int[denominations.Length];
+                int cents = (int)(change * 100);
+                int[] result = new int[denominations.Length + coins.Length];
+                int i = 0;
 
-                for (int i = 0; i < denominations.Length; i++)
+                Console.WriteLine();
+                Console.WriteLine("Denomination       Peices");
+                foreach (int deno in denominations)
                 {
-                    counts[i] = (int)(change / denominations[i]);
-                    change -= counts[i] * denominations[i];
-                    change = Math.Round(change, 2); 
+                    int count = cents / (deno * 100);
+                    if (count > 0) Console.WriteLine($"₱{deno, -20}{count}");
+                    result[i++] = count;
+                    cents %= deno * 100;
                 }
 
-                return counts;
-            }
-            static void DisplayChangeBreakdown(int[] counts)
-            {
-                int totalPieces = 0;
-                Console.WriteLine("\nDenomination       Count");
-
-                for (int i = 0; i < denominations.Length; i++)
+                foreach (decimal coin in coins)
                 {
-                    if (counts[i] > 0)
-                    {
-                        Console.WriteLine($"₱{denominations[i],-10}          {counts[i]}");
-                        totalPieces += counts[i];
-                    }
+                    int count = cents / (int)(coin * 100);
+                    if (count > 0) Console.WriteLine($"₱{coin, -20:F2}{count}");
+                    result[i++] = count;
+                    cents %= (int)(coin * 100);
                 }
-
-                Console.WriteLine($"\nTotal pieces: {totalPieces}");
+                return result;
             }
         }
     }
