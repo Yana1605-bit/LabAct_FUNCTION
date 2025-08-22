@@ -1,0 +1,83 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace A02
+{
+    internal class Program
+    {
+        class Student
+        {
+            public string name;
+            public int finalScore;
+            public string grade;
+        }
+
+        static int Curve(int score)
+        {
+            if (score >= 60 && score <= 79)
+                score += 5;
+            else if (score >= 80 && score <= 89)
+                score += 3;
+
+            return (score > 100) ? 100 : score;
+        }
+
+        static string Bucket(int finalScore)
+        {
+            switch (finalScore/10)
+            {
+                case 10:
+                case 9: return "A";
+                case 8: return "B";
+                case 7: return "C";
+                case 6: return "D";
+                default: return "F";
+            }
+        }
+        static void Main()
+        {
+            var students = new List<Student>();
+
+            while (true)
+            {
+                Console.Write("Enter student's name (END to stop): ");
+                string name = Console.ReadLine().Trim();
+
+                if (name.ToUpper() == "END")
+                    break;
+
+                int rawScore;
+                while (true)
+                {
+                    Console.Write("Enter score (0–100): ");
+                    if (int.TryParse(Console.ReadLine(), out rawScore) && rawScore >= 0 && rawScore <= 100)
+                        break;
+                    Console.WriteLine("Invalid score. Try again.");
+                }
+
+                int finalScore = Curve(rawScore);
+                string grade = Bucket(finalScore);
+                string normalizedName = name.ToUpper();
+
+                students.Add(new Student { name = normalizedName, finalScore = finalScore, grade = grade });
+            }
+
+            Console.WriteLine();
+            foreach (string grade in new[] { "A", "B", "C", "D", "F" })
+            {
+                var group = students.Where(s => s.grade == grade).ToList();
+                if (group.Count > 0)
+                {
+                    Console.WriteLine($"\nGrade {grade} - {group.Count} student(s):");
+                    foreach (var student in group)
+                    {
+                        Console.WriteLine($"* {student.name}: {student.finalScore}");
+                    }
+                }
+            }
+        }
+    }
+}
