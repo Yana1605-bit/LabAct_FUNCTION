@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace A10
+{
+    internal class Program
+    {
+        class CartLine
+        {
+            public string itemCode;
+            public int Qty;
+            public decimal unitPice;
+            public string Cart;
+        }
+        static void Main()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            var cart = new List<CartLine>();
+            while (true)
+            {
+                Console.Write("Item Code (Exit to stop): ");
+                string code = Console.ReadLine();
+                if (code.ToUpper() == "EXIT")
+                    break;
+
+                Console.Write("Quantity: ");
+                int qty = int.Parse(Console.ReadLine());
+                Console.Write("Price: ");
+
+                decimal price = decimal.Parse(Console.ReadLine());
+                Console.Write("Category ({GROCERY/ELECTRONICS/OTHER): ");
+                string Cart = Console.ReadLine().ToUpper();
+
+                Console.WriteLine();
+
+                if (qty < 1 || price < 0 || (Cart != "GROCERY" && Cart != "ELECTRONICS" && Cart != "OTHER"))
+                {
+                    Console.WriteLine("Invalid.");
+                    continue;
+                }
+
+
+                cart.Add(new CartLine { itemCode = code, Qty = qty, unitPice = price, Cart = Cart });
+            }
+
+            decimal subTotal = 0, groceryDisc = 0, electroTotal = 0;
+            var codes = new HashSet<string>();
+
+            foreach (var c in cart)
+            {
+                decimal lineTotal = c.Qty * c.unitPice;
+                subTotal += lineTotal;
+                codes.Add(c.itemCode);
+                if (c.Cart == "GROCERY" && c.Qty >= 10) groceryDisc += lineTotal * 0.05m;
+                if (c.Cart == "ELECTRONICS") electroTotal += lineTotal;
+            }
+
+            decimal electroDisc = (electroTotal >= 20000) ? electroTotal * 0.08m : 0;
+            decimal cartDisc = (codes.Count >= 5) ? 50 : 0;
+            decimal total = subTotal - groceryDisc - electroDisc - cartDisc;
+
+            Console.WriteLine();
+            Console.WriteLine($"Subtotal: ₱{subTotal:F2}");
+            Console.WriteLine($"Grocery Disccount: ₱{groceryDisc:F2}");
+            Console.WriteLine($"Electronics Discount: ₱{electroDisc:F2}");
+            Console.WriteLine($"Cart Discount: ₱{cartDisc:F2}");
+            Console.WriteLine($"Final Total: ₱{total:F2}");
+        }
+    }
+}
