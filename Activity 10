@@ -18,6 +18,7 @@ namespace A10
         }
         static void Main()
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             var cart = new List<CartLine>();
             while (true)
             {
