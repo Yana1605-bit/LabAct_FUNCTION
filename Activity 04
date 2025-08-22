@@ -12,6 +12,7 @@ namespace A4
         {
             static int[] denominations = { 1000, 500, 200, 100, 50, 20, 10, 5, 1 };
             static decimal[] coins = { 0.25m, 0.10m, 0.05m };
+            
             static void Main()
             {
                 Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -20,7 +21,6 @@ namespace A4
 
                 Console.Write("Enter amount paid: ");
                 decimal amountPaid = Convert.ToDecimal(Console.ReadLine());
-
 
                 if (amountPaid < amountDue)
                 {
@@ -33,9 +33,11 @@ namespace A4
                 {
                     Console.WriteLine("Exact payment, no change.");
                 }
+               
                 Console.WriteLine($"Returned change: {change}");
                 MakeChange(change);
             }
+
             static int[] MakeChange(decimal change)
             {
                 int cents = (int)(change * 100);
@@ -44,6 +46,7 @@ namespace A4
 
                 Console.WriteLine();
                 Console.WriteLine("Denomination       Peices");
+    
                 foreach (int deno in denominations)
                 {
                     int count = cents / (deno * 100);
