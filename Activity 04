@@ -45,7 +45,7 @@ namespace A4
                 int i = 0;
 
                 Console.WriteLine();
-                Console.WriteLine("Denomination       Peices");
+                Console.WriteLine("Denomination       Pieces");
     
                 foreach (int deno in denominations)
                 {
